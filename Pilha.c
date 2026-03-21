@@ -23,7 +23,7 @@ Carta remove_Carta(Pilha *p){
 
 Carta ver_topo(Pilha *p) {
     if (p->topo == 0) {
-        return criar_carta('0','0'); // carta placeholder
+        return criar_carta('0','0');
     }
     return p->cartas[p->topo-1];
 }

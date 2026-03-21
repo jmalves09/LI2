@@ -3,6 +3,7 @@
 #include "Baralho.h"
 #include "Pilha.h"
 #include "Jogo.h"
+#include "Interface.h"
 
 #define NUM_PILHAS 7
 #define TAM_PILHA 5
@@ -96,6 +97,17 @@ int main() {
     tirar_baralho(&jogo);
     mostrar_jogo(&jogo);
 */
+/*
+ char input[10];
+    int comando;
 
+    comando = ler_comando(input);
+
+    if(comando == 2) {
+        printf("Escolheste tirar do baralho\n");
+    } else if(comando == 1) {
+        printf("Escreveste a carta: %s\n", input);
+    }
+*/
     return 0;
 }

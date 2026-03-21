@@ -21,26 +21,28 @@ void iniciar_jogo(Jogo *j){
     adiciona_carta(&j->descarte, topo);
 }
 
-int jogar_carta(Jogo *j, Carta c){
-
-    Carta topo_descarte = ver_topo(&j->descarte);
+int jogar_carta(Jogo *j, Carta c) {
 
     for(int i = 0; i < NUM_PILHAS; i++) {
+
         Pilha *p = &j->pilhas[i];
 
-        if (!pilha_vazia(p)) {  
-            Carta topo_pilha = ver_topo(p);
+        if(!pilha_vazia(p)) {
 
-            if (jogada_valida(c, topo_descarte)) {
-                remove_Carta(p);
-                adiciona_carta(&j->descarte, c);
-                imprimir_carta(c);
+            Carta topo = ver_topo(p);
+
+            if(get_valor(topo) == get_valor(c) &&
+               get_naipe(topo) == get_naipe(c)) {
+
+                Carta removida = remove_Carta(p);
+                adiciona_carta(&j->descarte, removida);
+
                 return 1;
             }
         }
     }
-    printf("Carta inválida: ");
-    imprimir_carta(c);
+
+    printf("Jogada inválida\n");
     return 0;
 }
 
@@ -50,7 +52,6 @@ if(baralho_vazio(&j->baralho)) {
     }
 Carta c = tirar_carta(&j->baralho);
     adiciona_carta(&j->descarte, c);
-    imprimir_carta(c);
 }   
 
 int jogo_terminou(Jogo *j){
@@ -82,16 +83,20 @@ int jogo_terminou(Jogo *j){
 
 void mostrar_jogo(Jogo *j) {
 
-    for(int i = 0; i < NUM_PILHAS; i++) {
-        printf("Pilha %d: ", i+1);
-        for(int c = 0; c < j->pilhas[i].topo; c++) {
+    for (int i = 0; i < NUM_PILHAS; i++) {
+        printf("Pilha %d: ", i + 1);
+
+        for (int c = 0; c < j->pilhas[i].topo; c++) {
             imprimir_carta(j->pilhas[i].cartas[c]);
         }
+
         printf("\n");
     }
 
-    if(!pilha_vazia(&j->descarte)) {
+    if (!pilha_vazia(&j->descarte)) {
+        printf("Descarte: ");
         imprimir_carta(ver_topo(&j->descarte));
+        printf("\n");
     } else {
         printf("Descarte vazio!\n");
     }

@@ -1,8 +1,6 @@
 #ifndef BARALHO_H
 #define BARALHO_H
-
 #include "Carta.h"
-
 #define TAM_BARALHO 52
 
 typedef struct {

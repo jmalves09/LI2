@@ -1,8 +1,6 @@
 #ifndef PILHA_H
 #define PILHA_H
-
 #include "Carta.h"
-
 #define TAM_PILHA 5
 
 typedef struct {

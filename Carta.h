@@ -21,8 +21,10 @@ int jogada_valida(Carta a, Carta b);
 
 // Getters 
 int get_valor(Carta c);
+
 // Getters
 int get_naipe(Carta c);
+
 // funcao que imprime a carta 
 // exemplo As de Espadas == AS
 void imprimir_carta(Carta c);

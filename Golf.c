@@ -8,8 +8,8 @@ int main() {
     char input[5];
 
     iniciar_jogo(&jogo);
-
-    while(!jogo_terminou(&jogo)) {
+    int run = 1;
+    while(!jogo_terminou(&jogo) & run !=0) {
 
         mostrar_jogo(&jogo);
 
@@ -29,7 +29,7 @@ int main() {
         else if(cmd == 0) {
 
             printf("A sair do jogo...\n");
-            break;
+            run=0;
         }
     }
 

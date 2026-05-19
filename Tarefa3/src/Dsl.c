@@ -9,9 +9,7 @@
 void inicializaDsl(Dsl *dsl) {
 
     dsl->nomeJogo[0] = '\0';
-
     dsl->numeroBaralhos = 0;
-
     dsl->numTipos = 0;
     dsl->numInits = 0;
     dsl->numMovimentos = 0;

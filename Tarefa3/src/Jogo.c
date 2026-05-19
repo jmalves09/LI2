@@ -7,13 +7,11 @@
 #include "Parser.h"
 
 
-void iniciarJogo(Jogo *j,
-                 const char *ficheiroDsl) {
+void iniciarJogo(Jogo *j, const char *ficheiroDsl) {
 
     inicializaDsl(&j->regras);
 
-    parseFicheiro(ficheiroDsl,
-                  &j->regras);
+    parseFicheiro(ficheiroDsl, &j->regras);
 
     iniciar_baralho(&j->baralho);
 
@@ -59,7 +57,6 @@ void criarPilhas(Jogo *j) {
     }
 }
 
-
 void distribuirCartas(Jogo *j) {
 
     int i;
@@ -74,6 +71,7 @@ void distribuirCartas(Jogo *j) {
         }
     }
 }
+
 RegraMovimento *encontrarMovimento(Jogo *j,
                                    int origem,
                                    int destino) {

@@ -1,60 +1,85 @@
-/* src/parser.c */
+/* src/Parser.c */
 
 #include <stdio.h>
 #include <string.h>
 
-#include "../include/parser.h"
-#include "../include/dsl.h"
+#include "Parser.h"
+#include "Dsl.h"
 
 #define MAX_LINHA 256
 
-static void removeComentario(char *linha) {
-    char *comentario = strchr(linha, '#');
 
-    if (comentario != NULL)
+void removeComentario(char *linha) {
+
+    char *comentario;
+
+    comentario = strchr(linha,
+                        '#');
+
+    if(comentario != NULL) {
         *comentario = '\0';
+    }
 }
 
-void parseFicheiro(const char *nomeFicheiro) {
+
+void parseFicheiro(const char *nomeFicheiro,
+                   Dsl *dsl) {
 
     FILE *f;
     char linha[MAX_LINHA];
 
-    f = fopen(nomeFicheiro, "r");
+    f = fopen(nomeFicheiro,
+              "r");
 
-    if (f == NULL) {
+    if(f == NULL) {
+
         printf("Erro ao abrir ficheiro.\n");
         return;
     }
 
-    while (fgets(linha, MAX_LINHA, f) != NULL) {
+    while(fgets(linha,
+                MAX_LINHA,
+                f) != NULL) {
 
         char comando[32];
 
         removeComentario(linha);
 
-        if (sscanf(linha, "%s", comando) != 1)
-            continue;
+        if(sscanf(linha,
+                  "%s",
+                  comando) != 1) {
 
-        if (strcmp(comando, "JOGO") == 0) {
+            continue;
+        }
+
+        if(strcmp(comando,
+                  "JOGO") == 0) {
 
             char nome[64];
 
-            sscanf(linha, "JOGO %s", nome);
+            sscanf(linha,
+                   "JOGO %s",
+                   nome);
 
-            adicionaJogo(nome);
+            adicionaJogo(dsl,
+                         nome);
         }
 
-        else if (strcmp(comando, "BARALHOS") == 0) {
+        else if(strcmp(comando,
+                       "BARALHOS") == 0) {
 
             int n;
 
-            sscanf(linha, "BARALHOS %d", &n);
+            sscanf(linha,
+                   "BARALHOS %d",
+                   &n);
 
-            adicionaBaralhos(n);
+            adicionaBaralhos(dsl,
+                             n);
         }
 
-        else if (strcmp(comando, "TIPO") == 0) {
+        else if(strcmp(comando,
+                       "TIPO") == 0) {
 
             char tipo[32];
             char flags[32];
@@ -64,23 +89,29 @@ void parseFicheiro(const char *nomeFicheiro) {
                    tipo,
                    flags);
 
-            adicionaTipo(tipo, flags);
+            adicionaTipo(dsl,
+                         tipo,
+                         flags);
         }
 
-        else if (strcmp(comando, "INIT") == 0) {
+        else if(strcmp(comando,
+                       "INIT") == 0) {
 
             char tipo[32];
-            int n;
+            int quantidade;
 
             sscanf(linha,
                    "INIT %s %d",
                    tipo,
-                   &n);
+                   &quantidade);
 
-            adicionaInit(tipo, n);
+            adicionaInit(dsl,
+                         tipo,
+                         quantidade);
         }
 
-        else if (strcmp(comando, "MOV") == 0) {
+        else if(strcmp(comando,
+                       "MOV") == 0) {
 
             char origem[32];
             char destino[32];
@@ -92,12 +123,14 @@ void parseFicheiro(const char *nomeFicheiro) {
                    destino,
                    flags);
 
-            adicionaMovimento(origem,
+            adicionaMovimento(dsl,
+                              origem,
                               destino,
                               flags);
         }
 
-        else if (strcmp(comando, "AUTO") == 0) {
+        else if(strcmp(comando,
+                       "AUTO") == 0) {
 
             char origem[32];
             char destino[32];
@@ -109,22 +142,26 @@ void parseFicheiro(const char *nomeFicheiro) {
                    destino,
                    flags);
 
-            adicionaAuto(origem,
+            adicionaAuto(dsl,
+                         origem,
                          destino,
                          flags);
         }
 
-        else if (strcmp(comando, "WIN") == 0) {
+        else if(strcmp(comando,
+                       "WIN") == 0) {
 
             char tipo[32];
-            int n;
+            int objetivo;
 
             sscanf(linha,
                    "WIN %s %d",
                    tipo,
-                   &n);
+                   &objetivo);
 
-            adicionaWin(tipo, n);
+            adicionaWin(dsl,
+                        tipo,
+                        objetivo);
         }
     }
 

@@ -1,8 +1,11 @@
-/* include/parser.h */
+/* include/Parser.h */
 
 #ifndef PARSER_H
 #define PARSER_H
 
-void parseFicheiro(const char *nomeFicheiro);
+#include "Dsl.h"
+
+void parseFicheiro(const char *nomeFicheiro,
+                   Dsl *dsl);
 
 #endif

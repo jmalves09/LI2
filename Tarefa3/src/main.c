@@ -1,9 +1,24 @@
+#include <stdio.h>
 
-#include "../include/parser.h"
+#include "Jogo.h"
 
-int main() {
+int main(int argc,
+         char *argv[]) {
 
-    parseFicheiro("paciencias/golf.paciencia");
+    Jogo j;
+
+    if(argc < 2) {
+
+        printf("Uso: %s ficheiro.paciencia\n",
+               argv[0]);
+
+        return 1;
+    }
+
+    iniciarJogo(&j,
+                 argv[1]);
+
+    mostrarJogo(&j);
 
     return 0;
 }

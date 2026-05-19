@@ -61,10 +61,17 @@ int moverCartas(Jogo *j, int origem, int destino);
 //Função que executa movimentos automáticos
 int executarAuto(Jogo *j);
 
+//Função que verifica se existe jogadas possíveis
+int existeJogadaPossivel(Jogo *j);
+
+//Função help
+int encontrarAjuda(Jogo *j, int *origem, int *destino);
+
 //Função que verifica condições de vitória
 int verificarWin(Jogo *j);
 
 //Função que verifica se o jogo terminou
+//termina se vençer ou se não existir mais nenhuma jogada possível
 int jogoTerminou(Jogo *j);
 
 //mostra o estado atual do jogo

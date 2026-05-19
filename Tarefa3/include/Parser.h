@@ -25,6 +25,9 @@ void parseMov(Dsl *dsl, char *linha)
 // função que processa a linha AUTO
 void parseAuto(Dsl *dsl, char *linha)
 
+//Função que provessa a linha de Distribuição
+void parseDist(Dsl *dsl, char *linha)
+
 // função que processa a linha WIN
 void parseWin(Dsl *dsl, char *linha)
 

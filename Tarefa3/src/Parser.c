@@ -110,6 +110,34 @@ void parseAuto(Dsl *dsl,
                  flags);
 }
 
+void parseDist(Dsl *dsl,
+               char *linha) {
+
+    char tipo[32];
+
+    int valores[20];
+
+    int quantidade;
+
+    quantidade = sscanf(linha,
+                        "DIST %s %d %d %d %d %d %d %d %d %d %d",
+                        tipo,
+                        &valores[0],
+                        &valores[1],
+                        &valores[2],
+                        &valores[3],
+                        &valores[4],
+                        &valores[5],
+                        &valores[6],
+                        &valores[7],
+                        &valores[8],
+                        &valores[9]);
+
+    adicionaDistribuicao(dsl,
+                         tipo,
+                         valores,
+                         quantidade - 1);
+}
 
 void parseWin(Dsl *dsl,
               char *linha) {
@@ -179,6 +207,12 @@ void processaLinha(Dsl *dsl,
                       linha);
         }
 
+        else if(strcmp(comando,
+                      "DIST") == 0) {
+
+              parseDist(dsl,
+              linha);
+}
         else if(strcmp(comando,
                        "WIN") == 0) {
 

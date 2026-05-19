@@ -58,16 +58,39 @@ void criarPilhas(Jogo *j) {
 }
 
 void distribuirCartas(Jogo *j) {
+    int d;
+    int p;
+    int atual;
 
-    int i;
+    for(d = 0;
+        d < j->regras.numDistribuicoes;
+        d++) {
 
-    for(i = 0; i < j->numPilhas; i++) {
+        RegraDistribuicao *dist;
 
-        if(strcmp(j->pilhas[i].tipo,
-                  "TAB") == 0) {
+        dist = &j->regras.distribuicoes[d];
 
-            adiciona_carta(&j->pilhas[i].pilha,
-                            tirar_carta(&j->baralho));
+        atual = 0;
+
+        for(p = 0;
+            p < j->numPilhas;
+            p++) {
+
+            if(strcmp(j->pilhas[p].tipo,
+                      dist->tipo) == 0) {
+
+                int n;
+
+                for(n = 0;
+                    n < dist->valores[atual];
+                    n++) {
+
+                    adiciona_carta(&j->pilhas[p].pilha,
+                                    tirar_carta(&j->baralho));
+                }
+
+                atual++;
+            }
         }
     }
 }
@@ -434,6 +457,59 @@ int executarAuto(Jogo *j) {
     return 0;
 }
 
+int existeJogadaPossivel(Jogo *j){
+    int o;
+    int d;
+
+    for(o = 0; o < j->numPilhas; o++) {
+
+        for(d = 0; d < j->numPilhas; d++) {
+
+            if(o != d) {
+
+                if(maiorSequenciaMovivel(j,
+                                         o,
+                                         d) > 0) {
+
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+int encontrarAjuda(Jogo *j,
+                   int *origem,
+                   int *destino) {
+
+    int o;
+    int d;
+
+    for(o = 0; o < j->numPilhas; o++) {
+
+        for(d = 0; d < j->numPilhas; d++) {
+
+            if(o != d) {
+
+                if(maiorSequenciaMovivel(j,
+                                         o,
+                                         d) > 0) {
+
+                    *origem = o;
+
+                    *destino = d;
+
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 int verificarWin(Jogo *j) {
 
     int w;
@@ -463,7 +539,18 @@ int verificarWin(Jogo *j) {
 }
 
 int jogoTerminou(Jogo *j) {
-return verificarWin(j);
+
+    if(verificarWin(j)) {
+
+        return 1;
+    }
+
+    if(!existeJogadaPossivel(j)) {
+
+        return 1;
+    }
+
+    return 0;
 }
 
 

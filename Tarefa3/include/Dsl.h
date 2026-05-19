@@ -36,6 +36,19 @@ typedef struct {
     int objetivo;
 } RegraWin;
 
+//Estrutura distribuição
+typedef struct {
+
+    char tipo[MAX_NOME];
+
+    int valores[20];
+    int quantidade;
+
+} RegraDistribuicao;
+
+RegraDistribuicao distribuicoes[20];
+int numDistribuicoes;
+
 //Estrutura Dsl
 typedef struct {
 
@@ -94,6 +107,11 @@ void adicionaAuto(Dsl *dsl,
                   const char *destino,
                   const char *flags);
 
+//Função que ajuda a distribuir cartas
+//DIST TAB 8 8 8 7 6 5 4 3 2 1 mete 8 cartas na primeira pilha e por aí em diante
+//Foi necessário alterar paciencias 
+void adicionaDistribuicao(Dsl *dsl, const char *tipo, int valores[], int quantidade);
+
 //Função que guarda uma condição de Vitória
 void adicionaWin(Dsl *dsl,
                  const char *tipo,
@@ -105,5 +123,6 @@ int temFlag(const char *flags,
 
 //Imprime a Informação guardada
 void imprimeDsl(const Dsl *dsl);
+
 
 #endif

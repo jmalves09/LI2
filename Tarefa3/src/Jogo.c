@@ -22,6 +22,8 @@ void iniciarJogo(Jogo *j, const char *ficheiroDsl) {
     criarPilhas(j);
 
     distribuirCartas(j);
+
+    j->existeUndo = 0;
 }
 
 
@@ -510,6 +512,38 @@ int encontrarAjuda(Jogo *j,
     return 0;
 }
 
+void guardarUndo(Jogo *j) {
+
+    j->undo.baralho = j->baralho;
+
+    j->undo.numPilhas = j->numPilhas;
+
+    memcpy(j->undo.pilhas,
+           j->pilhas,
+           sizeof(j->pilhas));
+
+    j->existeUndo = 1;
+}
+
+
+void desfazerJogada(Jogo *j) {
+
+    if(!j->existeUndo) {
+
+        return;
+    }
+
+    j->baralho = j->undo.baralho;
+
+    j->numPilhas = j->undo.numPilhas;
+
+    memcpy(j->pilhas,
+           j->undo.pilhas,
+           sizeof(j->pilhas));
+
+    j->existeUndo = 0;
+}
+
 int verificarWin(Jogo *j) {
 
     int w;
@@ -575,5 +609,128 @@ void mostrarJogo(Jogo *j) {
 
         printf("\n");
     }
+
+int guardarJogo(Jogo *j,
+                const char *ficheiro,
+                const char *ficheiroPaciencia) {
+
+    FILE *f;
+
+    int p;
+    int c;
+
+    f = fopen(ficheiro,
+              "w");
+
+    if(f == NULL) {
+
+        return 0;
+    }
+
+    /* nome da paciencia */
+
+    fprintf(f,
+            "%s\n",
+            ficheiroPaciencia);
+
+    /* pilhas */
+
+    for(p = 0; p < j->numPilhas; p++) {
+
+        for(c = 0;
+            c < j->pilhas[p].pilha.topo;
+            c++) {
+
+            Carta carta;
+
+            carta = j->pilhas[p].pilha.cartas[c];
+
+            escrever_carta(f,
+                            carta);
+
+            fprintf(f,
+                    " ");
+        }
+
+        fprintf(f,
+                "\n");
+    }
+
+    fclose(f);
+
+    return 1;
+}
+
+int carregarJogo(Jogo *j,
+                 const char *ficheiro,
+                 char *ficheiroPaciencia) {
+
+    FILE *f;
+
+    char texto[20];
+
+    int p;
+
+    f = fopen(ficheiro,
+              "r");
+
+    if(f == NULL) {
+
+        return 0;
+    }
+
+    /* ler nome da paciencia */
+
+    fscanf(f,
+           "%s",
+           ficheiroPaciencia);
+
+    /* iniciar jogo */
+
+    iniciarJogo(j,
+                 ficheiroPaciencia);
+
+    /* limpar pilhas */
+
+    for(p = 0; p < j->numPilhas; p++) {
+
+        j->pilhas[p].pilha.topo = 0;
+    }
+
+    /* carregar cartas */
+
+    for(p = 0; p < j->numPilhas; p++) {
+
+        char linha[256];
+
+        fgets(linha,
+              sizeof(linha),
+              f);
+
+        if(fgets(linha,
+                 sizeof(linha),
+                 f) != NULL) {
+
+            char *token;
+
+            token = strtok(linha," \n");
+            while(token != NULL) {
+
+                Carta carta;
+
+                carta = ler_carta(token);
+
+                adiciona_carta(&j->pilhas[p].pilha,
+                                carta);
+
+                token = strtok(NULL," \n");
+            }
+        }
+    }
+
+    fclose(f);
+
+    return 1;
+}
 }
 

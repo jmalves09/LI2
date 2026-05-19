@@ -18,6 +18,15 @@ typedef struct {
 
 } PilhaJogo;
 
+typedef struct {
+
+    Baralho baralho;
+
+    PilhaJogo pilhas[MAX_PILHAS];
+
+    int numPilhas;
+
+} EstadoJogo;
 
 typedef struct {
 
@@ -26,7 +35,12 @@ typedef struct {
     Baralho baralho;
 
     PilhaJogo pilhas[MAX_PILHAS];
+
     int numPilhas;
+
+    EstadoJogo undo;
+
+    int existeUndo;
 
 } Jogo;
 
@@ -67,6 +81,13 @@ int existeJogadaPossivel(Jogo *j);
 //Função help
 int encontrarAjuda(Jogo *j, int *origem, int *destino);
 
+//Função que faz cópia de tudo
+void guardarUndo(Jogo *j);
+
+//Função que que faz undo. 
+//Só pode voltar 1 jogada atrás
+void desfazerJogada(Jogo *j);
+
 //Função que verifica condições de vitória
 int verificarWin(Jogo *j);
 
@@ -76,5 +97,11 @@ int jogoTerminou(Jogo *j);
 
 //mostra o estado atual do jogo
 void mostrarJogo(Jogo *j);
+
+//Função que guarda o estado atual do jogo num ficheiro
+int guardarJogo(Jogo *j, const char *ficheiro, const char *ficheiroPaciencia);
+
+//Função que carrega um jogo guardado
+int carregarJogo(Jogo *j, const char *ficheiro, char *ficheiroPaciencia);
 
 #endif

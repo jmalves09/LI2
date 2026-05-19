@@ -9,7 +9,15 @@ void mostrarComandos(void) {
 
     printf("m origem destino  -> mover cartas\n");
 
+    printf("u                 -> desfazer jogada\n");
+
     printf("h                 -> ajuda\n");
+
+    printf("q                 -> sair\n\n");
+    
+    printf("s ficheiro        -> guardar jogo\n");
+
+    printf("l ficheiro        -> carregar jogo\n");
 
     printf("q                 -> sair\n\n");
 }
@@ -17,8 +25,8 @@ void mostrarComandos(void) {
 
 void lerComando(char *cmd,
                 int *origem,
-                int *destino) {
-
+                int *destino,
+                char *ficheiro) {
     printf("> ");
 
     scanf(" %c",
@@ -33,5 +41,15 @@ void lerComando(char *cmd,
         (*origem)--;
 
         (*destino)--;
+    }
+    else if(cmd == 'u') {
+
+    desfazerJogada(&j);
+    }
+    else if(*cmd == 's' ||
+            *cmd == 'l') {
+
+        scanf("%s",
+              ficheiro);
     }
 }

@@ -7,8 +7,6 @@
 void mostrarComandos(void);
 
 //Função que interpreta os comandos
-void lerComando(char *cmd,
-                int *origem,
-                int *destino);
+void lerComando(char *cmd, int *origem, int *destino, char *ficheiro);
 
 #endif

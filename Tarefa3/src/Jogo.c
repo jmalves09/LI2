@@ -269,30 +269,46 @@ int pilhaAceitaCarta(Jogo *j,
 
     cartaDestino = ver_topo(pDestino);
 
-
-    /* regra '<' */
+    /* regras '<' e '>' */
 
     if(temFlag(m->flags,
-               '<')) {
+           '<') &&
 
-        if(valor_numerico(cartaOrigem) !=
-           valor_numerico(cartaDestino) - 1) {
+    temFlag(m->flags,
+           '>')) {
 
-            return 0;
-        }
+    int vo;
+    int vd;
+
+    vo = valor_numerico(cartaOrigem);
+
+    vd = valor_numerico(cartaDestino);
+
+    if(vo != vd - 1 &&
+       vo != vd + 1) {
+
+        return 0;
+    }
     }
 
+    else if(temFlag(m->flags,
+                '<')) {
 
-    /* regra '>' */
+    if(valor_numerico(cartaOrigem) !=
+       valor_numerico(cartaDestino) - 1) {
 
-    if(temFlag(m->flags,
-               '>')) {
+        return 0;
+    }
+    }
 
-        if(valor_numerico(cartaOrigem) !=
-           valor_numerico(cartaDestino) + 1) {
+    else if(temFlag(m->flags,
+                '>')) {
 
-            return 0;
-        }
+    if(valor_numerico(cartaOrigem) !=
+       valor_numerico(cartaDestino) + 1) {
+
+        return 0;
+    }
     }
 
 
@@ -329,6 +345,19 @@ int maiorSequenciaMovivel(Jogo *j,
 
     if(m == NULL) {
         return 0;
+    }
+    if(temFlag(m->flags,
+           '-')) {
+
+    if(pilhaAceitaCarta(j,
+                        origem,
+                        destino,
+                        1)) {
+
+        return 1;
+    }
+
+    return 0;
     }
 
     p = &j->pilhas[origem].pilha;
@@ -610,6 +639,17 @@ void mostrarJogo(Jogo *j) {
             printf("[%d cartas]",
                    j->pilhas[i].pilha.topo);
         }
+        else if(strcmp(j->pilhas[i].tipo,
+               "DESCARTE") == 0) {
+
+        if(!pilha_vazia(&j->pilhas[i].pilha)) {
+
+        imprimir_carta(
+            ver_topo(&j->pilhas[i].pilha)
+        );
+        }
+        }
+
 
         else {
 
@@ -713,6 +753,8 @@ int carregarJogo(Jogo *j,
     fscanf(f,
            "%s",
            ficheiroPaciencia);
+
+    fgetc(f);
 
     /* iniciar jogo */
 

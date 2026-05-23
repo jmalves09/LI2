@@ -46,9 +46,6 @@ typedef struct {
 
 } RegraDistribuicao;
 
-RegraDistribuicao distribuicoes[20];
-int numDistribuicoes;
-
 //Estrutura Dsl
 typedef struct {
 
@@ -70,6 +67,9 @@ typedef struct {
 
     RegraWin wins[50];
     int numWins;
+
+    RegraDistribuicao distribuicoes[20];
+    int numDistribuicoes;
 
 } Dsl;
 

@@ -12,8 +12,6 @@ void mostrarComandos(void) {
     printf("u                 -> desfazer jogada\n");
 
     printf("h                 -> ajuda\n");
-
-    printf("q                 -> sair\n\n");
     
     printf("s ficheiro        -> guardar jogo\n");
 
@@ -42,10 +40,7 @@ void lerComando(char *cmd,
 
         (*destino)--;
     }
-    else if(cmd == 'u') {
 
-    desfazerJogada(&j);
-    }
     else if(*cmd == 's' ||
             *cmd == 'l') {
 

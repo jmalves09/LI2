@@ -1,15 +1,28 @@
-# Makefile
+CC = gcc
 
-CC=gcc
+CFLAGS = -Wall -Wextra -pedantic -Iinclude
 
-CFLAGS=-Wall -Wextra -Iinclude
+SRC = src/main.c \
+      src/Jogo.c \
+      src/Parser.c \
+      src/Dsl.c \
+      src/Interface.c \
+      src/Carta.c \
+      src/Pilha.c \
+      src/Baralho.c
 
-SRC=src/main.c src/parser.c src/dsl.c
+OBJ = $(SRC:.c=.o)
 
-OBJ=$(SRC:.c=.o)
+EXEC = paciencia
 
-jogo: $(OBJ)
-	$(CC) $(OBJ) -o jogo
+
+$(EXEC): $(OBJ)
+	$(CC) $(CFLAGS) -o $(EXEC) $(OBJ)
+
+
+src/%.o: src/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 
 clean:
-	rm -f src/*.o jogo
+	rm -f src/*.o $(EXEC)

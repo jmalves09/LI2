@@ -2,6 +2,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "Jogo.h"
 #include "Parser.h"
@@ -44,10 +47,11 @@ void criarPilhas(Jogo *j) {
 
             p = &j->pilhas[j->numPilhas];
 
-            sprintf(p->nome,
-                    "%s%d",
-                    init.tipo,
-                    n + 1);
+            snprintf(p->nome,
+            sizeof(p->nome),
+            "%s%d",
+            init.tipo,
+            n + 1);
 
             strcpy(p->tipo,
                    init.tipo);
@@ -589,7 +593,7 @@ int jogoTerminou(Jogo *j) {
 
 
 void mostrarJogo(Jogo *j) {
- int i;
+    int i;
     int c;
 
     printf("JOGO: %s\n\n",
@@ -609,7 +613,7 @@ void mostrarJogo(Jogo *j) {
 
         printf("\n");
     }
-
+}
 int guardarJogo(Jogo *j,
                 const char *ficheiro,
                 const char *ficheiroPaciencia) {
@@ -618,9 +622,18 @@ int guardarJogo(Jogo *j,
 
     int p;
     int c;
+    
+    mkdir("saves", 0777);
 
-    f = fopen(ficheiro,
-              "w");
+    char caminho[128];
+
+    snprintf(caminho,
+         sizeof(caminho),
+         "saves/%s",
+         ficheiro);
+
+    f = fopen(caminho,
+          "w");
 
     if(f == NULL) {
 
@@ -667,11 +680,16 @@ int carregarJogo(Jogo *j,
 
     FILE *f;
 
-    char texto[20];
+    char caminho[128];
 
     int p;
 
-    f = fopen(ficheiro,
+    snprintf(caminho,
+             sizeof(caminho),
+             "saves/%s",
+             ficheiro);
+
+    f = fopen(caminho,
               "r");
 
     if(f == NULL) {
@@ -699,38 +717,36 @@ int carregarJogo(Jogo *j,
 
     /* carregar cartas */
 
-    for(p = 0; p < j->numPilhas; p++) {
+   for(p = 0; p < j->numPilhas; p++) {
 
-        char linha[256];
+    char linha[256];
 
-        fgets(linha,
-              sizeof(linha),
-              f);
+    if(fgets(linha,
+             sizeof(linha),
+             f) != NULL) {
 
-        if(fgets(linha,
-                 sizeof(linha),
-                 f) != NULL) {
+        char *token;
 
-            char *token;
+        token = strtok(linha,
+                       " \n");
 
-            token = strtok(linha," \n");
-            while(token != NULL) {
+        while(token != NULL) {
 
-                Carta carta;
+            Carta carta;
 
-                carta = ler_carta(token);
+            carta = ler_carta(token);
 
-                adiciona_carta(&j->pilhas[p].pilha,
-                                carta);
+            adiciona_carta(&j->pilhas[p].pilha,
+                            carta);
 
-                token = strtok(NULL," \n");
-            }
+            token = strtok(NULL,
+                           " \n");
         }
     }
+}
 
     fclose(f);
 
     return 1;
-}
 }
 

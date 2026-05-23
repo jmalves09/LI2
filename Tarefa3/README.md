@@ -23,58 +23,60 @@ O programa lê ficheiros `.paciencia` com as regras do jogo e permite jogar dife
 # Estrutura do Projeto
 
 include/
-    Baralho.h
-    Carta.h
-    Dsl.h
-    Interface.h
-    Jogo.h
-    Parser.h
-    Pilha.h
+- Baralho.h
+- Carta.h
+- Dsl.h
+- Interface.h
+- Jogo.h
+- Parser.h
+- Pilha.h
 
 src/
-    Baralho.c
-    Carta.c
-    Dsl.c
-    Interface.c
-    Jogo.c
-    Parser.c
-    Pilha.c
-    main.c
+- Baralho.c
+- Carta.c
+- Dsl.c
+- Interface.c
+- Jogo.c
+- Parser.c
+- Pilha.c
+- main.c
 
 paciencias/
-    simplesimon.paciencia
-    golf.paciencia
-    freecell.paciencia
+- simplesimon.paciencia
+- golf.paciencia
+- freecell.paciencia
 
 saves/
 
 Makefile
+
 README.md
 
 # Comandos
 
-m origem destino - move cartas da pilha origem para pilha destino
-u                - desfazer jogada (apenas 1)
-h                - ajuda 
-s                - guarda ficheiro (necessário dar nome, ENTER para concluir a gravação)
-l                - carrega ficheiro guardado (necessario inserir nome antes, ENTER para concluir o carregamento)
-q                - sair do jogo
+- m origem destino - move cartas da pilha origem para pilha destino
+- u                - desfazer jogada (apenas 1)
+- h                - ajuda 
+- s                - guarda ficheiro (necessário dar nome, ENTER para concluir a gravação)
+- l                - carrega ficheiro guardado (necessario inserir nome antes, ENTER para concluir o carregamento)
+- q                - sair do jogo
 
 # Save
 
 Os jogos são guardados automaticamente na pasta saves/
-Exemplo:
+- Exemplo:
 > s
 > jogo1
-cria:
+- cria:
 saves/jogo1.txt
 
 # RUN 
 
 Existem 3 jogos na pasta paciencias que podem ser corridos:
-freecell.paciencia
-golf.paciencia
-simplesimon.paciencia
+- freecell.paciencia
+- golf.paciencia
+- simplesimon.paciencia
 
 para correr, escrever no terminal:
-./paciencia paciencias/nome_do_ficheiro.paciencia
+
+- ./paciencia paciencias/nome_do_ficheiro.paciencia

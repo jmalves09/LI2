@@ -4,6 +4,8 @@
 
 #include "Jogo.h"
 #include "Interface.h"
+#include <stdlib.h>
+#include <string.h>
 
 int main(int argc,
          char *argv[]) {
@@ -11,6 +13,8 @@ int main(int argc,
     Jogo j;
 
     char cmd;
+
+    char mensagem[128] = "";
 
     int origem;
     int destino;
@@ -37,7 +41,11 @@ int main(int argc,
 
     while(!jogoTerminou(&j)) {
 
+        system("clear");
+
         mostrarJogo(&j);
+
+        printf("\n%s\n", mensagem);
 
         mostrarComandos();
 
@@ -57,12 +65,12 @@ int main(int argc,
 
                 while(executarAuto(&j));
 
-                printf("Jogada realizada.\n");
+                strcpy(mensagem,"Jogada realizada.");
             }
 
             else {
 
-                printf("Jogada invalida.\n");
+                strcpy(mensagem,"Jogada invalida.");
             }
         }
 
@@ -74,14 +82,14 @@ int main(int argc,
                               &ajudaOrigem,
                               &ajudaDestino)) {
 
-                printf("Sugestao: mover de %s para %s\n",
+                sprintf(mensagem,"Sugestao: mover de %s para %s",
                        j.pilhas[ajudaOrigem].nome,
                        j.pilhas[ajudaDestino].nome);
             }
 
             else {
 
-                printf("Nao existem jogadas possiveis.\n");
+                strcpy(mensagem,"Nao existem jogadas possiveis.");
             }
         }
 
@@ -93,12 +101,12 @@ int main(int argc,
                            ficheiro,
                            argv[1])) {
 
-                printf("Jogo guardado.\n");
+                strcpy(mensagem,"Jogo guardado.");
             }
 
             else {
 
-                printf("Erro ao guardar jogo.\n");
+                strcpy(mensagem,"Erro ao guardar jogo.");
             }
         }
 
@@ -110,12 +118,12 @@ int main(int argc,
                             ficheiro,
                             ficheiroPaciencia)) {
 
-                printf("Jogo carregado.\n");
+                strcpy(mensagem,"Jogo carregado.");
             }
 
             else {
 
-                printf("Erro ao carregar jogo.\n");
+                strcpy(mensagem,"Erro ao carregar jogo.");
             }
         }
 
@@ -125,14 +133,14 @@ int main(int argc,
 
             desfazerJogada(&j);
 
-            printf("Jogada desfeita.\n");
+            strcpy(mensagem,"Jogada desfeita.");
         }
 
         /* sair */
 
         else if(cmd == 'q') {
 
-            printf("A sair...\n");
+            strcpy(mensagem,"A sair...");
 
             return 0;
         }

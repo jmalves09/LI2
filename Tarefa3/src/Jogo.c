@@ -591,8 +591,8 @@ int jogoTerminou(Jogo *j) {
     return 0;
 }
 
-
 void mostrarJogo(Jogo *j) {
+
     int i;
     int c;
 
@@ -604,16 +604,27 @@ void mostrarJogo(Jogo *j) {
         printf("%s: ",
                j->pilhas[i].nome);
 
-        for(c = 0;
-            c < j->pilhas[i].pilha.topo;
-            c++) {
+        if(strcmp(j->pilhas[i].tipo,
+                  "STOCK") == 0) {
 
-            imprimir_carta(j->pilhas[i].pilha.cartas[c]);
+            printf("[%d cartas]",
+                   j->pilhas[i].pilha.topo);
+        }
+
+        else {
+
+            for(c = 0;
+                c < j->pilhas[i].pilha.topo;
+                c++) {
+
+                imprimir_carta(j->pilhas[i].pilha.cartas[c]);
+            }
         }
 
         printf("\n");
     }
 }
+
 int guardarJogo(Jogo *j,
                 const char *ficheiro,
                 const char *ficheiroPaciencia) {

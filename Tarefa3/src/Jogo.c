@@ -29,99 +29,113 @@ void iniciarJogo(Jogo *j, const char *ficheiroDsl) {
 
 void criarPilhas(Jogo *j) {
 
-    int i;
+int i;
 
-    int tab = 1;
-    int fund = 1;
-    int stock = 1;
-    int descarte = 1;
-    int cell = 1;
+int tab = 1;
+int fund = 1;
+int stock = 1;
+int descarte = 1;
+int cell = 1;
 
-    for(i = 0;
-        i < j->regras.numInits;
-        i++) {
+for(i = 0;
+    i < j->regras.numInits;
+    i++) {
 
-        InitPilha init;
+    InitPilha init;
 
-        PilhaJogo *p;
+    PilhaJogo *p;
 
-        int c;
+    int c;
+    int t;
 
-        init = j->regras.inits[i];
+    init = j->regras.inits[i];
 
-        p = &j->pilhas[j->numPilhas];
+    p = &j->pilhas[j->numPilhas];
 
-        if(strcmp(init.tipo,
-                  "TAB") == 0) {
+    if(strcmp(init.tipo,
+              "TAB") == 0) {
 
-            snprintf(p->nome,
-                     sizeof(p->nome),
-                     "TAB%d",
-                     tab);
+        snprintf(p->nome,
+                 sizeof(p->nome),
+                 "TAB%d",
+                 tab);
 
-            tab++;
-        }
-
-        else if(strcmp(init.tipo,
-                       "FUND") == 0) {
-
-            snprintf(p->nome,
-                     sizeof(p->nome),
-                     "FUND%d",
-                     fund);
-
-            fund++;
-        }
-
-        else if(strcmp(init.tipo,
-                       "STOCK") == 0) {
-
-            snprintf(p->nome,
-                     sizeof(p->nome),
-                     "STOCK%d",
-                     stock);
-
-            stock++;
-        }
-
-        else if(strcmp(init.tipo,
-                       "DESCARTE") == 0) {
-
-            snprintf(p->nome,
-                     sizeof(p->nome),
-                     "DESCARTE%d",
-                     descarte);
-
-            descarte++;
-        }
-
-        else if(strcmp(init.tipo,
-                       "CELL") == 0) {
-
-            snprintf(p->nome,
-                     sizeof(p->nome),
-                     "CELL%d",
-                     cell);
-
-            cell++;
-        }
-
-        strcpy(p->tipo,
-               init.tipo);
-
-        iniciar_pilha(&p->pilha);
-
-        for(c = 0;
-            c < init.quantidade;
-            c++) {
-
-            adiciona_carta(&p->pilha,
-                           tirar_carta(&j->baralho));
-        }
-
-        j->numPilhas++;
+        tab++;
     }
+
+    else if(strcmp(init.tipo,
+                   "FUND") == 0) {
+
+        snprintf(p->nome,
+                 sizeof(p->nome),
+                 "FUND%d",
+                 fund);
+
+        fund++;
+    }
+
+    else if(strcmp(init.tipo,
+                   "STOCK") == 0) {
+
+        snprintf(p->nome,
+                 sizeof(p->nome),
+                 "STOCK%d",
+                 stock);
+
+        stock++;
+    }
+
+    else if(strcmp(init.tipo,
+                   "DESCARTE") == 0) {
+
+        snprintf(p->nome,
+                 sizeof(p->nome),
+                 "DESCARTE%d",
+                 descarte);
+
+        descarte++;
+    }
+
+    else if(strcmp(init.tipo,
+                   "CELL") == 0) {
+
+        snprintf(p->nome,
+                 sizeof(p->nome),
+                 "CELL%d",
+                 cell);
+
+        cell++;
+    }
+
+    strcpy(p->tipo,
+           init.tipo);
+
+    for(t = 0;
+        t < j->regras.numTipos;
+        t++) {
+
+        if(strcmp(j->regras.tipos[t].nome,
+                  init.tipo) == 0) {
+
+            p->visivel =
+                j->regras.tipos[t].flags[0];
+        }
+    }
+
+    iniciar_pilha(&p->pilha);
+
+    for(c = 0;
+        c < init.quantidade;
+        c++) {
+
+        adiciona_carta(&p->pilha,
+                       tirar_carta(&j->baralho));
+    }
+
+    j->numPilhas++;
 }
+}
+
 
 RegraMovimento *encontrarMovimento(Jogo *j,
                                    int origem,
@@ -273,9 +287,27 @@ if(temFlag(m->flags,
 cartaOrigem = ver_carta(pOrigem,
                         pOrigem->topo - quantidade);
 
-/* regra 'v' */
+/* destino vazio */
 
 if(pilha_vazia(pDestino)) {
+
+    /* regra 'a' */
+
+    if(temFlag(m->flags,
+               'a')) {
+
+        return valor_numerico(cartaOrigem) == 1;
+    }
+
+    /* regra 'K' */
+
+    if(temFlag(m->flags,
+               'K')) {
+
+        return valor_numerico(cartaOrigem) == 13;
+    }
+
+    /* regras 'v' e 'V' */
 
     if(temFlag(m->flags,
                'v') ||
@@ -334,13 +366,29 @@ else if(temFlag(m->flags,
     }
 }
 
-/* regra 's' */
+/* regra 'M' e 's' */
 
 if(temFlag(m->flags,
+           'M') ||
+
+   temFlag(m->flags,
            's')) {
 
     if(get_naipe(cartaOrigem) !=
        get_naipe(cartaDestino)) {
+
+        return 0;
+    }
+}
+
+/* regra 'd' */
+
+if(temFlag(m->flags,
+           'd')|| temFlag(m->flags,
+           'D')) {
+
+    if(cor_carta(cartaOrigem) ==
+       cor_carta(cartaDestino)) {
 
         return 0;
     }
@@ -371,13 +419,10 @@ if(m == NULL) {
     return 0;
 }
 
-/* regras '-' e '*' */
+/* sem '+' move apenas uma carta */
 
-if(temFlag(m->flags,
-           '-') ||
-
-   temFlag(m->flags,
-           '*')) {
+if(!temFlag(m->flags,
+            '+')) {
 
     if(pilhaAceitaCarta(j,
                         origem,
@@ -418,7 +463,6 @@ for(n = p->topo;
 
 return 0;
 }
-
 
 int moverCartas(Jogo *j,
                 int origem,
@@ -652,50 +696,61 @@ int jogoTerminou(Jogo *j) {
 
     return 0;
 }
-
 void mostrarJogo(Jogo *j) {
 
-    int i;
-    int c;
+int i;
+int c;
 
-    printf("JOGO: %s\n\n",
-           j->regras.nomeJogo);
+printf("JOGO: %s\n\n",
+       j->regras.nomeJogo);
 
-    for(i = 0; i < j->numPilhas; i++) {
+for(i = 0;
+    i < j->numPilhas;
+    i++) {
 
-        printf("%s: ",
-               j->pilhas[i].nome);
+    printf("%s: ",
+           j->pilhas[i].nome);
 
-        if(strcmp(j->pilhas[i].tipo,
-                  "STOCK") == 0) {
+    /* pilha escondida */
 
-            printf("[%d cartas]",
-                   j->pilhas[i].pilha.topo);
-        }
-        else if(strcmp(j->pilhas[i].tipo,
-               "DESCARTE") == 0) {
+    if(j->pilhas[i].visivel == '_') {
 
-        if(!pilha_vazia(&j->pilhas[i].pilha)) {
-
-        imprimir_carta(
-            ver_topo(&j->pilhas[i].pilha)
-        );
-        }
-        }
-
-
-        else {
-
-            for(c = 0;
-                c < j->pilhas[i].pilha.topo;
-                c++) {
-
-                imprimir_carta(j->pilhas[i].pilha.cartas[c]);
-            }
-        }
-
-        printf("\n");
+        printf("[%d cartas]",
+               j->pilhas[i].pilha.topo);
     }
+
+    /* mostrar apenas topo */
+
+    else if(j->pilhas[i].visivel == '^') {
+
+        if(!pilha_vazia(
+            &j->pilhas[i].pilha)) {
+
+            imprimir_carta(
+                ver_topo(
+                    &j->pilhas[i].pilha
+                )
+            );
+        }
+    }
+
+    /* mostrar tudo */
+
+    else {
+
+        for(c = 0;
+            c < j->pilhas[i].pilha.topo;
+            c++) {
+
+            imprimir_carta(
+                j->pilhas[i]
+                .pilha.cartas[c]
+            );
+        }
+    }
+
+    printf("\n");
+}
 }
 
 int guardarJogo(Jogo *j,

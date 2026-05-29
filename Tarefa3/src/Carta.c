@@ -66,3 +66,18 @@ Carta ler_carta(char *texto) {
 
     return c;
 }
+
+int cor_carta(Carta c) {
+
+    char n;
+
+    n = get_naipe(c);
+
+    if(n == 'H' ||
+       n == 'D') {
+
+        return 1;
+    }
+
+    return 0;
+}

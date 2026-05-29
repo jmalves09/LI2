@@ -4,7 +4,7 @@
 
 typedef struct {
     char valor;   // As a Rei
-    char naipe;   // O E P C
+    char naipe;   // D S H C
 } Carta;
 
 
@@ -40,5 +40,9 @@ void escrever_carta(FILE *f, Carta c);
 
 //Função que Lê a carta
 Carta ler_carta(char *texto);
+
+//Função que verifica a cor de uma carta
+//1 é vermelha 0 é preto
+int cor_carta(Carta c);
 
 #endif

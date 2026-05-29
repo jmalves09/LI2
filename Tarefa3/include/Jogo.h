@@ -1,7 +1,7 @@
 #ifndef JOGO_H
 #define JOGO_H
 
-#include "Carta.h"
+#include "Carta.h"  
 #include "Pilha.h"
 #include "Baralho.h"
 #include "Dsl.h"
@@ -11,12 +11,18 @@
 
 typedef struct {
 
-    char nome[32];
-    char tipo[32];
+char nome[32];
 
-    Pilha pilha;
+/* tipo lógico */
+char tipo[32];
+
+/* representação visual */
+char visivel;
+
+Pilha pilha;
 
 } PilhaJogo;
+
 
 typedef struct {
 

@@ -76,6 +76,7 @@ Existem 3 jogos na pasta paciencias que podem ser corridos:
 - freecell.paciencia
 - golf.paciencia
 - simplesimon.paciencia
+- klondike.paciencia
 
 para correr, escrever no terminal:
 

@@ -15,7 +15,6 @@ void inicializaDsl(Dsl *dsl) {
     dsl->numMovimentos = 0;
     dsl->numAutos = 0;
     dsl->numWins = 0;
-    dsl->numDistribuicoes = 0;
 }
 
 
@@ -110,30 +109,6 @@ void adicionaAuto(Dsl *dsl,
            flags);
 
     dsl->numAutos++;
-}
-
-void adicionaDistribuicao(Dsl *dsl,
-                          const char *tipo,
-                          int valores[],
-                          int quantidade) {
-
-    RegraDistribuicao *d;
-
-    int i;
-
-    d = &dsl->distribuicoes[dsl->numDistribuicoes];
-
-    strcpy(d->tipo,
-           tipo);
-
-    d->quantidade = quantidade;
-
-    for(i = 0; i < quantidade; i++) {
-
-        d->valores[i] = valores[i];
-    }
-
-    dsl->numDistribuicoes++;
 }
 
 void adicionaWin(Dsl *dsl,

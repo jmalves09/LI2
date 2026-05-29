@@ -63,8 +63,9 @@ int contar_sequencia(Pilha *p, int pos){
     }
 
     int count = 1;
+    int flag = 1;
 
-    for(int i = pos; i < p->topo - 1; i++){
+    for(int i = pos; i < p->topo - 1 && flag ; i++){
         Carta atual = p->cartas[i];
         Carta seguinte = p->cartas[i + 1];
 
@@ -72,7 +73,7 @@ int contar_sequencia(Pilha *p, int pos){
            valor_numerico(atual) == valor_numerico(seguinte) + 1){
             count++;
         } else {
-            break;
+            flag = 0;
         }
     }
 

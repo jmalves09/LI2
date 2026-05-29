@@ -24,80 +24,102 @@ void iniciarJogo(Jogo *j, const char *ficheiroDsl) {
 
     criarPilhas(j);
 
-    distribuirCartas(j);
-
     j->existeUndo = 0;
 }
-
 
 void criarPilhas(Jogo *j) {
 
     int i;
-    int n;
 
-    for(i = 0; i < j->regras.numInits; i++) {
+    int tab = 1;
+    int fund = 1;
+    int stock = 1;
+    int descarte = 1;
+    int cell = 1;
+
+    for(i = 0;
+        i < j->regras.numInits;
+        i++) {
 
         InitPilha init;
 
+        PilhaJogo *p;
+
+        int c;
+
         init = j->regras.inits[i];
 
-        for(n = 0; n < init.quantidade; n++) {
+        p = &j->pilhas[j->numPilhas];
 
-            PilhaJogo *p;
-
-            p = &j->pilhas[j->numPilhas];
+        if(strcmp(init.tipo,
+                  "TAB") == 0) {
 
             snprintf(p->nome,
-            sizeof(p->nome),
-            "%s%d",
-            init.tipo,
-            n + 1);
+                     sizeof(p->nome),
+                     "TAB%d",
+                     tab);
 
-            strcpy(p->tipo,
-                   init.tipo);
-
-            iniciar_pilha(&p->pilha);
-
-            j->numPilhas++;
+            tab++;
         }
-    }
-}
 
-void distribuirCartas(Jogo *j) {
-    int d;
-    int p;
-    int atual;
+        else if(strcmp(init.tipo,
+                       "FUND") == 0) {
 
-    for(d = 0;
-        d < j->regras.numDistribuicoes;
-        d++) {
+            snprintf(p->nome,
+                     sizeof(p->nome),
+                     "FUND%d",
+                     fund);
 
-        RegraDistribuicao *dist;
-
-        dist = &j->regras.distribuicoes[d];
-
-        atual = 0;
-
-        for(p = 0;
-            p < j->numPilhas;
-            p++) {
-
-            if(strcmp(j->pilhas[p].tipo,
-                      dist->tipo) == 0) {
-
-                int n;
-
-                for(n = 0;
-                    n < dist->valores[atual];
-                    n++) {
-
-                    adiciona_carta(&j->pilhas[p].pilha,
-                                    tirar_carta(&j->baralho));
-                }
-
-                atual++;
-            }
+            fund++;
         }
+
+        else if(strcmp(init.tipo,
+                       "STOCK") == 0) {
+
+            snprintf(p->nome,
+                     sizeof(p->nome),
+                     "STOCK%d",
+                     stock);
+
+            stock++;
+        }
+
+        else if(strcmp(init.tipo,
+                       "DESCARTE") == 0) {
+
+            snprintf(p->nome,
+                     sizeof(p->nome),
+                     "DESCARTE%d",
+                     descarte);
+
+            descarte++;
+        }
+
+        else if(strcmp(init.tipo,
+                       "CELL") == 0) {
+
+            snprintf(p->nome,
+                     sizeof(p->nome),
+                     "CELL%d",
+                     cell);
+
+            cell++;
+        }
+
+        strcpy(p->tipo,
+               init.tipo);
+
+        iniciar_pilha(&p->pilha);
+
+        for(c = 0;
+            c < init.quantidade;
+            c++) {
+
+            adiciona_carta(&p->pilha,
+                           tirar_carta(&j->baralho));
+        }
+
+        j->numPilhas++;
     }
 }
 
@@ -187,95 +209,92 @@ int sequenciaValida(Pilha *p,
 }
 
 int pilhaAceitaCarta(Jogo *j,
-                     int origem,
-                     int destino,
-                     int quantidade) {
+int origem,
+int destino,
+int quantidade) {
 
-    RegraMovimento *m;
+RegraMovimento *m;
 
-    Pilha *pOrigem;
-    Pilha *pDestino;
+Pilha *pOrigem;
+Pilha *pDestino;
 
-    Carta cartaOrigem;
-    Carta cartaDestino;
+Carta cartaOrigem;
+Carta cartaDestino;
 
-    int pos;
-    int mesmoNaipe;
+int pos;
+int mesmoNaipe;
 
-    m = encontrarMovimento(j,
-                           origem,
-                           destino);
+m = encontrarMovimento(j,
+                       origem,
+                       destino);
 
-    if(m == NULL) {
+if(m == NULL) {
+
+    return 0;
+}
+
+pOrigem = &j->pilhas[origem].pilha;
+pDestino = &j->pilhas[destino].pilha;
+
+if(pilha_vazia(pOrigem)) {
+
+    return 0;
+}
+
+/* regra '-' */
+
+if(temFlag(m->flags,
+           '-') &&
+
+   quantidade != 1) {
+
+    return 0;
+}
+
+/* regra '+' */
+
+if(temFlag(m->flags,
+           '+')) {
+
+    pos = pOrigem->topo - quantidade;
+
+    mesmoNaipe = temFlag(m->flags,
+                         'm');
+
+    if(!sequenciaValida(pOrigem,
+                        pos,
+                        quantidade,
+                        mesmoNaipe)) {
+
         return 0;
     }
+}
 
-    pOrigem = &j->pilhas[origem].pilha;
-    pDestino = &j->pilhas[destino].pilha;
+cartaOrigem = ver_carta(pOrigem,
+                        pOrigem->topo - quantidade);
 
-    if(pilha_vazia(pOrigem)) {
-        return 0;
-    }
+/* regra 'v' */
 
-
-    /* regra '-' */
+if(pilha_vazia(pDestino)) {
 
     if(temFlag(m->flags,
-               '-') &&
+               'v') ||
 
-       quantidade != 1) {
+       temFlag(m->flags,
+               'V')) {
 
-        return 0;
+        return 1;
     }
 
+    return 0;
+}
 
-    /* regra '+' */
+cartaDestino = ver_topo(pDestino);
 
-    if(temFlag(m->flags,
-               '+')) {
+/* regra '~' */
 
-        pos = pOrigem->topo - quantidade;
-
-        mesmoNaipe = temFlag(m->flags,
-                             'm');
-
-        if(!sequenciaValida(pOrigem,
-                            pos,
-                            quantidade,
-                            mesmoNaipe)) {
-
-            return 0;
-        }
-    }
-
-
-    cartaOrigem = ver_carta(pOrigem,
-                            pOrigem->topo - quantidade);
-
-
-    /* regra 'v' */
-
-    if(pilha_vazia(pDestino)) {
-
-        if(temFlag(m->flags,
-                   'v')) {
-
-            return 1;
-        }
-
-        return 0;
-    }
-
-
-    cartaDestino = ver_topo(pDestino);
-
-    /* regras '<' e '>' */
-
-    if(temFlag(m->flags,
-           '<') &&
-
-    temFlag(m->flags,
-           '>')) {
+if(temFlag(m->flags,
+           '~')) {
 
     int vo;
     int vd;
@@ -289,9 +308,11 @@ int pilhaAceitaCarta(Jogo *j,
 
         return 0;
     }
-    }
+}
 
-    else if(temFlag(m->flags,
+/* regra '<' */
+
+else if(temFlag(m->flags,
                 '<')) {
 
     if(valor_numerico(cartaOrigem) !=
@@ -299,9 +320,11 @@ int pilhaAceitaCarta(Jogo *j,
 
         return 0;
     }
-    }
+}
 
-    else if(temFlag(m->flags,
+/* regra '>' */
+
+else if(temFlag(m->flags,
                 '>')) {
 
     if(valor_numerico(cartaOrigem) !=
@@ -309,45 +332,52 @@ int pilhaAceitaCarta(Jogo *j,
 
         return 0;
     }
+}
+
+/* regra 's' */
+
+if(temFlag(m->flags,
+           's')) {
+
+    if(get_naipe(cartaOrigem) !=
+       get_naipe(cartaDestino)) {
+
+        return 0;
     }
+}
 
+return 1;
 
-    /* regra 's' */
-
-    if(temFlag(m->flags,
-               's')) {
-
-        if(get_naipe(cartaOrigem) !=
-           get_naipe(cartaDestino)) {
-
-            return 0;
-        }
-    }
-
-    return 1;
 }
 
 int maiorSequenciaMovivel(Jogo *j,
-                          int origem,
-                          int destino) {
+int origem,
+int destino) {
 
-    RegraMovimento *m;
+RegraMovimento *m;
 
-    Pilha *p;
+Pilha *p;
 
-    int n;
-    int pos;
-    int mesmoNaipe;
+int n;
+int pos;
+int mesmoNaipe;
 
-    m = encontrarMovimento(j,
-                           origem,
-                           destino);
+m = encontrarMovimento(j,
+                       origem,
+                       destino);
 
-    if(m == NULL) {
-        return 0;
-    }
-    if(temFlag(m->flags,
-           '-')) {
+if(m == NULL) {
+
+    return 0;
+}
+
+/* regras '-' e '*' */
+
+if(temFlag(m->flags,
+           '-') ||
+
+   temFlag(m->flags,
+           '*')) {
 
     if(pilhaAceitaCarta(j,
                         origem,
@@ -358,34 +388,37 @@ int maiorSequenciaMovivel(Jogo *j,
     }
 
     return 0;
-    }
+}
 
-    p = &j->pilhas[origem].pilha;
+p = &j->pilhas[origem].pilha;
 
-    mesmoNaipe = temFlag(m->flags,
-                         'm');
+mesmoNaipe = temFlag(m->flags,
+                     'm');
 
-    for(n = p->topo; n >= 1; n--) {
+for(n = p->topo;
+    n >= 1;
+    n--) {
 
-        pos = p->topo - n;
+    pos = p->topo - n;
 
-        if(sequenciaValida(p,
-                           pos,
-                           n,
-                           mesmoNaipe)) {
+    if(sequenciaValida(p,
+                       pos,
+                       n,
+                       mesmoNaipe)) {
 
-            if(pilhaAceitaCarta(j,
-                                origem,
-                                destino,
-                                n)) {
+        if(pilhaAceitaCarta(j,
+                            origem,
+                            destino,
+                            n)) {
 
-                return n;
-            }
+            return n;
         }
     }
-
-    return 0;
 }
+
+return 0;
+}
+
 
 int moverCartas(Jogo *j,
                 int origem,

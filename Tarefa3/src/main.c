@@ -138,7 +138,15 @@ while(!jogoTerminou(&j)) {
 
 mostrarJogo(&j);
 
+if(verificarWin(&j)) {
+
 printf("\nVITORIA!\n");
+
+} else {
+
+printf("\nSEM JOGADAS POSSIVEIS!\n");
+
+}
 
 return 0;
 }

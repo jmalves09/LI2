@@ -64,7 +64,7 @@ void distribuirCartas(Jogo *j);
 int encontrarTipo(Dsl *dsl, const char *tipo);
 
 //Função que verifica se um bloco está em sequencia válida
-int sequenciaValida(Pilha *p, int pos, int quantidade, int mesmoNaipe);
+int sequenciaValida(Pilha *p, int pos, int quantidade, int mesmoNaipe, int alternaCor);
 
 
 
@@ -93,11 +93,14 @@ int validarDestinoVazio(RegraMovimento *m, Carta carta);
 
 //Funcao auxiliar a pilhaAceitaCarta
 //Funcao que verifica se e possivel mover uma sequencia de cartas
-int validarSequencia(Jogo *j, RegraMovimento *m, int origem, int quantidade);
+int sequenciaValida(Pilha *p, int pos, int quantidade, int mesmoNaipe, int alternaCor);
 
 //Funcao auxiliar a pilhaAceitaCarta
 //Funcao que verifica se a quantidade de cartas a mover e valida
 int validarQuantidade(RegraMovimento *m,int quantidade);
+
+//Funcao que interpreta as regras do movimento(Flags)
+int validarSequencia(Jogo *j, RegraMovimento *m, int origem, int quantidade);
 
 //Função auxiliar a pilhaAceitaCarta
 //Função verifica se sao do mesmo naipe ou nao

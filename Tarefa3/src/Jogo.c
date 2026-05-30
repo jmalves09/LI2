@@ -106,37 +106,6 @@ for(i = 0; i < j->regras.numInits; i++) {
     }
 }
 
-int sequenciaValida(Pilha *p, int pos, int quantidade, int mesmoNaipe) {
-
-    int i;
-
-    for(i = pos; i < pos + quantidade - 1; i++) {
-
-        Carta atual;
-        Carta seguinte;
-
-        atual = ver_carta(p, i);
-
-        seguinte = ver_carta(p, i + 1);
-
-        if(valor_numerico(atual) != valor_numerico(seguinte) + 1) {
-
-            return 0;
-        }
-
-        if(mesmoNaipe) {
-
-            if(get_naipe(atual) != get_naipe(seguinte)) {
-
-                return 0;
-            }
-        }
-    }
-
-    return 1;
-}
-
-
 
 
 
@@ -239,7 +208,6 @@ if(!validarCor(m, cartaOrigem, cartaDestino)) {
 }
 
 return 1;
-
 }
 
 
@@ -254,17 +222,19 @@ return 1;
 
 int validarDestinoVazio(RegraMovimento *m, Carta carta) {
 
+if(temFlag(m->flags, '*')) { return 1; }
+
 if(temFlag(m->flags, 'a')) {
 
     return valor_numerico(carta) == 1;
 }
 
-if(temFlag(m->flags, 'K')) {
+if(temFlag(m->flags, 'k') || temFlag(m->flags, 'K')) {
 
     return valor_numerico(carta) == 13;
 }
 
-if(temFlag(m->flags, 'v') ||  temFlag(m->flags,'V')) {
+if(temFlag(m->flags, 'v') || temFlag(m->flags, 'V')) {
 
     return 1;
 }
@@ -272,7 +242,58 @@ if(temFlag(m->flags, 'v') ||  temFlag(m->flags,'V')) {
 return 0;
 }
 
+int validarQuantidade(RegraMovimento *m, int quantidade) {
 
+if(temFlag(m->flags, '-')) {
+
+    return quantidade == 1;
+}
+
+if(!temFlag(m->flags, '+')) {
+
+    return quantidade == 1;
+}
+
+return 1;
+}
+
+int sequenciaValida(Pilha *p, int pos, int quantidade, int mesmoNaipe, int alternaCor) {
+
+int i;
+
+for(i = pos; i < pos + quantidade - 1; i++) {
+
+    Carta atual;
+    Carta seguinte;
+
+    atual = ver_carta(p, i);
+
+    seguinte = ver_carta(p, i + 1);
+
+    if(valor_numerico(atual) != valor_numerico(seguinte) + 1) {
+
+        return 0;
+    }
+
+    if(mesmoNaipe) {
+
+        if(get_naipe(atual) != get_naipe(seguinte)) {
+
+            return 0;
+        }
+    }
+
+    if(alternaCor) {
+
+        if(cor_carta(atual) == cor_carta(seguinte)) {
+
+            return 0;
+        }
+    }
+}
+
+return 1;
+}
 
 int validarSequencia(Jogo *j, RegraMovimento *m, int origem, int quantidade) {
 
@@ -280,6 +301,7 @@ Pilha *p;
 
 int pos;
 int mesmoNaipe;
+int alternaCor;
 
 p = &j->pilhas[origem].pilha;
 
@@ -292,20 +314,10 @@ pos = p->topo - quantidade;
 
 mesmoNaipe = temFlag(m->flags, 'm');
 
-return sequenciaValida(p, pos, quantidade, mesmoNaipe);
+alternaCor = temFlag(m->flags,'d') || temFlag(m->flags, 'D');
+
+return sequenciaValida(p, pos, quantidade, mesmoNaipe, alternaCor);
 }
-
-
-int validarQuantidade(RegraMovimento *m, int quantidade) {
-
-if(temFlag(m->flags, '-')) {
-
-    return quantidade == 1;
-}
-
-return 1;
-}
-
 
 int validarNaipe(RegraMovimento *m, Carta origem, Carta destino) {
 
@@ -344,29 +356,6 @@ for(i = 0; i < j->regras.numMovimentos; i++) {
 return 0;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 int maiorSequenciaMovivel(Jogo *j, int origem, int destino) {
 
@@ -632,6 +621,7 @@ int jogoTerminou(Jogo *j) {
 
     return 0;
 }
+
 void mostrarJogo(Jogo *j) {
 
 int i;

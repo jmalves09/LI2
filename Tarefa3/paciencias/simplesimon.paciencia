@@ -15,6 +15,7 @@ INIT TAB 1
 INIT FUND 0
 INIT FUND 0
 INIT FUND 0
+INIT FUND 0
 # 1. uma carta pode ser movida se o seu valor for imediatamente inferior
 # 2. o mesmo se aplica a sequências do mesmo naipe, ordenadas em ordem decrescente
 # 3. qualquer carta pode ser movida para uma pilha vazia

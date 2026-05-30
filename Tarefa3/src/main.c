@@ -1,140 +1,144 @@
 /* src/main.c */
 
 #include <stdio.h>
-
-#include "Jogo.h"
-#include "Interface.h"
 #include <stdlib.h>
 #include <string.h>
 
+#include "Jogo.h"
+#include "Interface.h"
+
 int main(int argc,
-         char *argv[]) {
-
-    Jogo j;
-
-    char cmd;
-
-    char mensagem[128] = "";
-
-    int origem;
-    int destino;
-
-    int ajudaOrigem;
-    int ajudaDestino;
-
-    char ficheiro[64];
-
-    char ficheiroPaciencia[64];
-
-    if(argc < 2) {
-
-        printf("Uso: %s ficheiro.paciencia\n",
-               argv[0]);
-
-        return 1;
-    }
+char *argv[]) {
 
 
-    iniciarJogo(&j, argv[1]);
+Jogo j;
 
+char cmd;
 
-    while(!jogoTerminou(&j)) {
+char mensagem[128] = "";
 
-        system("clear");
+int origem;
+int destino;
 
-        mostrarJogo(&j);
+int ajudaOrigem;
+int ajudaDestino;
 
-        printf("\n%s\n", mensagem);
+int quantidade;
 
-        mostrarComandos();
+char ficheiro[64];
 
-        lerComando(&cmd, &origem, &destino, ficheiro);
-        /* mover */
+char ficheiroPaciencia[64];
 
-        if(cmd == 'm') {
+if(argc < 2) {
 
-            guardarUndo(&j);
+    printf("Uso: %s ficheiro.paciencia\n",
+           argv[0]);
 
-            if(moverCartas(&j, origem, destino)) {
+    return 1;
+}
 
-                while(executarAuto(&j));
+iniciarJogo(&j,
+            argv[1]);
 
-                strcpy(mensagem,"Jogada realizada.");
-            }
+while(!jogoTerminou(&j)) {
 
-            else {
-
-                strcpy(mensagem,"Jogada invalida.");
-            }
-        }
-
-        /* ajuda */
-
-        else if(cmd == 'h') {
-
-            if(encontrarAjuda(&j, &ajudaOrigem, &ajudaDestino)) {
-
-                sprintf(mensagem,"Sugestao: mover de %s para %s", j.pilhas[ajudaOrigem].nome, j.pilhas[ajudaDestino].nome);
-            }
-
-            else {
-
-                strcpy(mensagem,"Nao existem jogadas possiveis.");
-            }
-        }
-
-        /* guardar */
-
-        else if(cmd == 's') {
-
-            if(guardarJogo(&j, ficheiro, argv[1])) {
-
-                strcpy(mensagem,"Jogo guardado.");
-            }
-
-            else {
-
-                strcpy(mensagem,"Erro ao guardar jogo.");
-            }
-        }
-
-        /* carregar */
-
-        else if(cmd == 'l') {
-
-            if(carregarJogo(&j, ficheiro, ficheiroPaciencia)) {
-
-                strcpy(mensagem,"Jogo carregado.");
-            }
-
-            else {
-
-                strcpy(mensagem,"Erro ao carregar jogo.");
-            }
-        }
-
-        /* undo */
-
-        else if(cmd == 'u') {
-
-            desfazerJogada(&j);
-
-            strcpy(mensagem,"Jogada desfeita.");
-        }
-
-        /* sair */
-
-        else if(cmd == 'q') {
-
-            strcpy(mensagem,"A sair...");
-
-            return 0;
-        }
-    }
+    system("clear");
 
     mostrarJogo(&j);
 
-    printf("\nVITORIA!\n");
+    printf("\n%s\n",
+           mensagem);
 
-    return 0;
+    mostrarComandos();
+
+    lerComando(&cmd, &origem, &destino, ficheiro);
+
+    /* mover */
+
+    if(cmd == 'm') {
+
+        guardarUndo(&j);
+
+        quantidade = maiorSequenciaMovivel(&j, origem, destino);
+
+        if(moverCartas(&j, origem, destino, quantidade)) {
+
+            while(executarAuto(&j));
+
+            strcpy(mensagem, "Jogada realizada.");
+        }
+
+        else {
+            strcpy(mensagem, "Jogada invalida.");
+        }
+    }
+
+    /* ajuda */
+
+    else if(cmd == 'h') {
+
+        if(encontrarAjuda(&j, &ajudaOrigem, &ajudaDestino)) {
+
+            sprintf(mensagem, "Sugestao: mover de %s para %s", j.pilhas[ajudaOrigem].nome, j.pilhas[ajudaDestino].nome);
+        }
+
+        else {
+
+            strcpy(mensagem, "Nao existem jogadas possiveis.");
+        }
+    }
+
+    /* guardar */
+
+    else if(cmd == 's') {
+
+        if(guardarJogo(&j, ficheiro, argv[1])) {
+
+            strcpy(mensagem, "Jogo guardado.");
+        }
+
+        else {
+            strcpy(mensagem, "Erro ao guardar jogo.");
+        }
+    }
+
+    /* carregar */
+
+    else if(cmd == 'l') {
+
+        if(carregarJogo(&j, ficheiro, ficheiroPaciencia)) {
+
+            strcpy(mensagem, "Jogo carregado.");
+        }
+
+        else {
+
+            strcpy(mensagem, "Erro ao carregar jogo.");
+        }
+    }
+
+    /* undo */
+
+    else if(cmd == 'u') {
+
+        desfazerJogada(&j);
+
+        strcpy(mensagem, "Jogada desfeita.");
+    }
+
+    /* sair */
+
+    else if(cmd == 'q') {
+
+        strcpy(mensagem, "A sair...");
+
+        return 0;
+    }
+}
+
+mostrarJogo(&j);
+
+printf("\nVITORIA!\n");
+
+return 0;
 }

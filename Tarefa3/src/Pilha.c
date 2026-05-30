@@ -55,8 +55,6 @@ int adicionar_n_cartas(Pilha *p, Carta cartas[], int n){
     return 1;
 }
 
-//funcao que conta quantas cartas estao na sequencia correta
-//sequencia decrescente e com o mesmo naipe
 int contar_sequencia(Pilha *p, int pos){
      if(pos < 0 || pos >= p->topo){
         return 0;

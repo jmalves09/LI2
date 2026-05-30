@@ -21,30 +21,23 @@ void mostrarComandos(void) {
 }
 
 
-void lerComando(char *cmd,
-                int *origem,
-                int *destino,
-                char *ficheiro) {
+void lerComando(char *cmd, int *origem, int *destino, char *ficheiro) {
+
     printf("> ");
 
-    scanf(" %c",
-          cmd);
+    scanf(" %c", cmd);
 
     if(*cmd == 'm') {
 
-        scanf("%d %d",
-              origem,
-              destino);
+        scanf("%d %d", origem, destino);
 
         (*origem)--;
 
         (*destino)--;
     }
 
-    else if(*cmd == 's' ||
-            *cmd == 'l') {
+    else if(*cmd == 's' || *cmd == 'l') {
 
-        scanf("%s",
-              ficheiro);
+        scanf("%s", ficheiro);
     }
 }

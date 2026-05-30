@@ -35,8 +35,7 @@ int main(int argc,
     }
 
 
-    iniciarJogo(&j,
-                 argv[1]);
+    iniciarJogo(&j, argv[1]);
 
 
     while(!jogoTerminou(&j)) {
@@ -49,19 +48,14 @@ int main(int argc,
 
         mostrarComandos();
 
-        lerComando(&cmd,
-                   &origem,
-                   &destino,
-                   ficheiro);
+        lerComando(&cmd, &origem, &destino, ficheiro);
         /* mover */
 
         if(cmd == 'm') {
 
             guardarUndo(&j);
 
-            if(moverCartas(&j,
-                           origem,
-                           destino)) {
+            if(moverCartas(&j, origem, destino)) {
 
                 while(executarAuto(&j));
 
@@ -78,13 +72,9 @@ int main(int argc,
 
         else if(cmd == 'h') {
 
-            if(encontrarAjuda(&j,
-                              &ajudaOrigem,
-                              &ajudaDestino)) {
+            if(encontrarAjuda(&j, &ajudaOrigem, &ajudaDestino)) {
 
-                sprintf(mensagem,"Sugestao: mover de %s para %s",
-                       j.pilhas[ajudaOrigem].nome,
-                       j.pilhas[ajudaDestino].nome);
+                sprintf(mensagem,"Sugestao: mover de %s para %s", j.pilhas[ajudaOrigem].nome, j.pilhas[ajudaDestino].nome);
             }
 
             else {
@@ -97,9 +87,7 @@ int main(int argc,
 
         else if(cmd == 's') {
 
-            if(guardarJogo(&j,
-                           ficheiro,
-                           argv[1])) {
+            if(guardarJogo(&j, ficheiro, argv[1])) {
 
                 strcpy(mensagem,"Jogo guardado.");
             }
@@ -114,9 +102,7 @@ int main(int argc,
 
         else if(cmd == 'l') {
 
-            if(carregarJogo(&j,
-                            ficheiro,
-                            ficheiroPaciencia)) {
+            if(carregarJogo(&j, ficheiro, ficheiroPaciencia)) {
 
                 strcpy(mensagem,"Jogo carregado.");
             }

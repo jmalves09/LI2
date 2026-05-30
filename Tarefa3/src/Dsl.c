@@ -18,42 +18,33 @@ void inicializaDsl(Dsl *dsl) {
 }
 
 
-void adicionaJogo(Dsl *dsl,
-                  const char *nome) {
+void adicionaJogo(Dsl *dsl, const char *nome) {
 
-    strcpy(dsl->nomeJogo,
-           nome);
+    strcpy(dsl->nomeJogo, nome);
 }
 
 
-void adicionaBaralhos(Dsl *dsl,
-                      int n) {
+void adicionaBaralhos(Dsl *dsl, int n) {
 
     dsl->numeroBaralhos = n;
 }
 
 
-void adicionaTipo(Dsl *dsl,
-                  const char *tipo,
-                  const char *flags) {
+void adicionaTipo(Dsl *dsl, const char *tipo, const char *flags) {
 
     TipoPilha *t;
 
     t = &dsl->tipos[dsl->numTipos];
 
-    strcpy(t->nome,
-           tipo);
+    strcpy(t->nome, tipo);
 
-    strcpy(t->flags,
-           flags);
+    strcpy(t->flags, flags);
 
     dsl->numTipos++;
 }
 
 
-void adicionaInit(Dsl *dsl,
-                  const char *tipo,
-                  int quantidade) {
+void adicionaInit(Dsl *dsl, const char *tipo, int quantidade) {
 
     InitPilha *i;
 
@@ -68,59 +59,44 @@ void adicionaInit(Dsl *dsl,
 }
 
 
-void adicionaMovimento(Dsl *dsl,
-                       const char *origem,
-                       const char *destino,
-                       const char *flags) {
+void adicionaMovimento(Dsl *dsl, const char *origem, const char *destino, const char *flags) {
 
     RegraMovimento *m;
 
     m = &dsl->movimentos[dsl->numMovimentos];
 
-    strcpy(m->origem,
-           origem);
+    strcpy(m->origem, origem);
 
-    strcpy(m->destino,
-           destino);
+    strcpy(m->destino, destino);
 
-    strcpy(m->flags,
-           flags);
+    strcpy(m->flags, flags);
 
     dsl->numMovimentos++;
 }
 
 
-void adicionaAuto(Dsl *dsl,
-                  const char *origem,
-                  const char *destino,
-                  const char *flags) {
+void adicionaAuto(Dsl *dsl, const char *origem, const char *destino, const char *flags) {
 
     RegraMovimento *a;
 
     a = &dsl->autos[dsl->numAutos];
 
-    strcpy(a->origem,
-           origem);
+    strcpy(a->origem, origem);
 
-    strcpy(a->destino,
-           destino);
+    strcpy(a->destino, destino);
 
-    strcpy(a->flags,
-           flags);
+    strcpy(a->flags, flags);
 
     dsl->numAutos++;
 }
 
-void adicionaWin(Dsl *dsl,
-                 const char *tipo,
-                 int objetivo) {
+void adicionaWin(Dsl *dsl, const char *tipo, int objetivo) {
 
     RegraWin *w;
 
     w = &dsl->wins[dsl->numWins];
 
-    strcpy(w->tipo,
-           tipo);
+    strcpy(w->tipo, tipo);
 
     w->objetivo = objetivo;
 
@@ -128,11 +104,9 @@ void adicionaWin(Dsl *dsl,
 }
 
 
-int temFlag(const char *flags,
-            char flag) {
+int temFlag(const char *flags, char flag) {
 
-    return strchr(flags,
-                  flag) != NULL;
+    return strchr(flags, flag) != NULL;
 }
 
 
@@ -140,20 +114,16 @@ void imprimeDsl(const Dsl *dsl) {
 
     int i;
 
-    printf("JOGO: %s\n",
-           dsl->nomeJogo);
+    printf("JOGO: %s\n", dsl->nomeJogo);
 
-    printf("BARALHOS: %d\n\n",
-           dsl->numeroBaralhos);
+    printf("BARALHOS: %d\n\n", dsl->numeroBaralhos);
 
 
     printf("TIPOS\n");
 
     for (i = 0; i < dsl->numTipos; i++) {
 
-        printf("  %s %s\n",
-               dsl->tipos[i].nome,
-               dsl->tipos[i].flags);
+        printf("  %s %s\n", dsl->tipos[i].nome, dsl->tipos[i].flags);
     }
 
 
@@ -161,9 +131,7 @@ void imprimeDsl(const Dsl *dsl) {
 
     for (i = 0; i < dsl->numInits; i++) {
 
-        printf("  %s %d\n",
-               dsl->inits[i].tipo,
-               dsl->inits[i].quantidade);
+        printf("  %s %d\n", dsl->inits[i].tipo, dsl->inits[i].quantidade);
     }
 
 
@@ -171,10 +139,7 @@ void imprimeDsl(const Dsl *dsl) {
 
     for (i = 0; i < dsl->numMovimentos; i++) {
 
-        printf("  %s -> %s [%s]\n",
-               dsl->movimentos[i].origem,
-               dsl->movimentos[i].destino,
-               dsl->movimentos[i].flags);
+        printf("  %s -> %s [%s]\n", dsl->movimentos[i].origem, dsl->movimentos[i].destino, dsl->movimentos[i].flags);
     }
 
 
@@ -182,10 +147,7 @@ void imprimeDsl(const Dsl *dsl) {
 
     for (i = 0; i < dsl->numAutos; i++) {
 
-        printf("  %s -> %s [%s]\n",
-               dsl->autos[i].origem,
-               dsl->autos[i].destino,
-               dsl->autos[i].flags);
+        printf("  %s -> %s [%s]\n", dsl->autos[i].origem, dsl->autos[i].destino, dsl->autos[i].flags);
     }
 
 
@@ -193,8 +155,6 @@ void imprimeDsl(const Dsl *dsl) {
 
     for (i = 0; i < dsl->numWins; i++) {
 
-        printf("  %s %d\n",
-               dsl->wins[i].tipo,
-               dsl->wins[i].objetivo);
+        printf("  %s %d\n", dsl->wins[i].tipo, dsl->wins[i].objetivo);
     }
 }

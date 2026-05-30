@@ -9,204 +9,140 @@
 #define MAX_LINHA 256
 
 
-void parseJogo(Dsl *dsl,
-               char *linha) {
+void parseJogo(Dsl *dsl, char *linha) {
 
     char nome[64];
 
-    sscanf(linha,
-           "JOGO %s",
-           nome);
+    sscanf(linha, "JOGO %s", nome);
 
-    adicionaJogo(dsl,
-                 nome);
+    adicionaJogo(dsl, nome);
 }
 
 
-void parseBaralhos(Dsl *dsl,
-                   char *linha) {
+void parseBaralhos(Dsl *dsl, char *linha) {
 
     int n;
 
-    sscanf(linha,
-           "BARALHOS %d",
-           &n);
+    sscanf(linha, "BARALHOS %d", &n);
 
-    adicionaBaralhos(dsl,
-                     n);
+    adicionaBaralhos(dsl, n);
 }
 
 
-void parseTipo(Dsl *dsl,
-               char *linha) {
+void parseTipo(Dsl *dsl, char *linha) {
 
     char tipo[32];
     char flags[32];
 
-    sscanf(linha,
-           "TIPO %s %s",
-           tipo,
-           flags);
+    sscanf(linha, "TIPO %s %s", tipo, flags);
 
-    adicionaTipo(dsl,
-                 tipo,
-                 flags);
+    adicionaTipo(dsl, tipo, flags);
 }
 
 
-void parseInit(Dsl *dsl,
-               char *linha) {
+void parseInit(Dsl *dsl, char *linha) {
 
     char tipo[32];
     int quantidade;
 
-    sscanf(linha,
-           "INIT %s %d",
-           tipo,
-           &quantidade);
+    sscanf(linha, "INIT %s %d", tipo, &quantidade);
 
-    adicionaInit(dsl,
-                 tipo,
-                 quantidade);
+    adicionaInit(dsl, tipo, quantidade);
 }
 
 
-void parseMov(Dsl *dsl,
-              char *linha) {
+void parseMov(Dsl *dsl, char *linha) {
 
     char origem[32];
     char destino[32];
     char flags[32];
 
-    sscanf(linha,
-           "MOV %s %s %s",
-           origem,
-           destino,
-           flags);
+    sscanf(linha, "MOV %s %s %s", origem, destino, flags);
 
-    adicionaMovimento(dsl,
-                      origem,
-                      destino,
-                      flags);
+    adicionaMovimento(dsl, origem, destino, flags);
 }
 
 
-void parseAuto(Dsl *dsl,
-               char *linha) {
+void parseAuto(Dsl *dsl, char *linha) {
 
     char origem[32];
     char destino[32];
     char flags[32];
 
-    sscanf(linha,
-           "AUTO %s %s %s",
-           origem,
-           destino,
-           flags);
+    sscanf(linha, "AUTO %s %s %s", origem, destino, flags);
 
-    adicionaAuto(dsl,
-                 origem,
-                 destino,
-                 flags);
+    adicionaAuto(dsl, origem, destino, flags);
 }
 
-void parseWin(Dsl *dsl,
-              char *linha) {
+void parseWin(Dsl *dsl, char *linha) {
 
     char tipo[32];
     int objetivo;
 
-    sscanf(linha,
-           "WIN %s %d",
-           tipo,
-           &objetivo);
+    sscanf(linha, "WIN %s %d", tipo, &objetivo);
 
-    adicionaWin(dsl,
-                tipo,
-                objetivo);
+    adicionaWin(dsl, tipo, objetivo);
 }
 
 
-void processaLinha(Dsl *dsl,
-                   char *linha) {
+void processaLinha(Dsl *dsl, char *linha) {
 
     char comando[32];
 
     if(linha[0] == '\n' || linha[0] == '#') {    return;    }
 
-    if(sscanf(linha,
-              "%s",
-              comando) == 1) {
+    if(sscanf(linha, "%s", comando) == 1) {
 
-        if(strcmp(comando,
-                  "JOGO") == 0) {
+        if(strcmp(comando, "JOGO") == 0) {
 
-            parseJogo(dsl,
-                      linha);
+            parseJogo(dsl, linha);
         }
 
-        else if(strcmp(comando,
-                       "BARALHOS") == 0) {
+        else if(strcmp(comando, "BARALHOS") == 0) {
 
-            parseBaralhos(dsl,
-                           linha);
+            parseBaralhos(dsl, linha);
         }
 
-        else if(strcmp(comando,
-                       "TIPO") == 0) {
+        else if(strcmp(comando, "TIPO") == 0) {
 
-            parseTipo(dsl,
-                      linha);
+            parseTipo(dsl, linha);
         }
 
-        else if(strcmp(comando,
-                       "INIT") == 0) {
+        else if(strcmp(comando, "INIT") == 0) {
 
-            parseInit(dsl,
-                      linha);
+            parseInit(dsl, linha);
         }
 
-        else if(strcmp(comando,
-                       "MOV") == 0) {
+        else if(strcmp(comando, "MOV") == 0) {
 
-            parseMov(dsl,
-                     linha);
+            parseMov(dsl, linha);
         }
 
-        else if(strcmp(comando,
-                       "AUTO") == 0) {
+        else if(strcmp(comando, "AUTO") == 0) {
 
-            parseAuto(dsl,
-                      linha);
+            parseAuto(dsl, linha);
         }
          
-        else if(strcmp(comando,
-                       "WIN") == 0) {
+        else if(strcmp(comando, "WIN") == 0) {
 
-            parseWin(dsl,
-                     linha);
+            parseWin(dsl, linha);
         }
     }
 }
 
 
-void parseFicheiro(const char *nomeFicheiro,
-                   Dsl *dsl) {
+void parseFicheiro(const char *nomeFicheiro, Dsl *dsl) {
 
     FILE *f;
     char linha[MAX_LINHA];
 
-    f = fopen(nomeFicheiro,
-              "r");
+    f = fopen(nomeFicheiro, "r");
 
     if(f != NULL) {
 
-        while(fgets(linha,
-                    MAX_LINHA,
-                    f) != NULL) {
+        while(fgets(linha, MAX_LINHA, f) != NULL) {
 
-            processaLinha(dsl,
-                          linha);
+            processaLinha(dsl, linha);
         }
 
         fclose(f);
